@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import './index.css';
 
 export default function Login({ setToken }) {
     const [authError, setAuthError] = useState("");
@@ -31,8 +32,8 @@ export default function Login({ setToken }) {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-16 p-8 bg-orange-50 rounded-lg border border-orange-200">
-          <h2 className="text-3xl font-extrabold mb-6 text-center text-orange-600">
+        <div className="max-w-md mx-auto mt-20 p-14 bg-blue-50 rounded-lg border border-blue-300">
+          <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-600">
             Login
             </h2>
           {authError && (
@@ -52,13 +53,13 @@ export default function Login({ setToken }) {
               onChange={(e) => setUsername(e.target.value)}
               className=" p-3
               border-2
-              border-orange-300
+              border-blue-300
               rounded
               w-full
               mb-4
               focus:outline-none
               focus:ring-2
-              focus:ring-orange-400"
+              focus:ring-blue-400"
               placeholder="Username"
             />
             <input
@@ -67,25 +68,25 @@ export default function Login({ setToken }) {
               onChange={(e) => setPassword(e.target.value)}
               className=" p-3
               border-2
-              border-orange-300
+              border-blue-300
               rounded
               w-full
               mb-4
               focus:outline-none
               focus:ring-2
-              focus:ring-orange-400"
+              focus:ring-blue-400"
               placeholder="password"
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded w-full transition-color duration-200 "
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded w-full transition-color duration-200 "
             >
               {authLoading ? "Loggin in...." : "Login"}
             </button>
           </form>
           <div className="mt-5 text-center text-gray-700">Don't have an account?
             <Link to="/signup">
-              <span className="text-orange-500 hover:underline font-semibold">
+              <span className="text-blue-500 hover:underline font-semibold">
                 Signup
               </span>
             </Link>

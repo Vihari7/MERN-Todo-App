@@ -15,10 +15,7 @@ app.use(cors());
 
 console.log("MONGOURL from env:", process.env.MONGOURL);
 
-mongoose.connect(MONGOURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+mongoose.connect(MONGOURL);
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -39,7 +36,7 @@ const Task = mongoose.model("Task", taskSchema);
 // signup
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  const hashed = await bcrypt(password, 10);
+  const hashed = await bcrypt.hash(password, 10);
   const user = new User({ username, password: hashed });
   await user.save();
   res.json({ message: "User has been registers" });
@@ -50,10 +47,10 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
 
-  if (!user || !(await bcrypt.compare(password, username))) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: "Invalid Credentials" });
   }
-  const token = jwt.sign({ userId: user, _id }, "secret", { expiresIn: "1h" });
+  const token = jwt.sign({ userId: user._id }, "secret", { expiresIn: "1h" });
   res.json({ token });
 });
 

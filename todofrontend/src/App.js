@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
-import './App.css';
+
 
 export default function App() {
   const MainApp = () => {};
