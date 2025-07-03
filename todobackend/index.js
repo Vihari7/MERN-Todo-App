@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -6,10 +9,11 @@ const bcrypt = require("bcryptjs");
 const PORT = process.env.PORT || 8080;
 const MONGOURL = process.env.MONGOURL;
 const cors = require("cors");
-dotenv.config()
 
 app.use(express.json());
 app.use(cors());
+
+console.log("MONGOURL from env:", process.env.MONGOURL);
 
 mongoose.connect(MONGOURL, {
     useNewUrlParser: true,
@@ -32,6 +36,7 @@ const taskSchema = new mongoose.Schema({
  
 const Task = mongoose.model("Task", taskSchema);
 
+// signup
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   const hashed = await bcrypt(password, 10);
@@ -39,7 +44,8 @@ app.post("/register", async (req, res) => {
   await user.save();
   res.json({ message: "User has been registers" });
 });
-  
+
+// login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -51,6 +57,7 @@ app.post("/login", async (req, res) => {
   res.json({ token });
 });
 
+//create authMiddleware for route protection
 const authMiddleware = (req, res, next) => {
   const token = req.header("Autherization")?.replace("Bearer ", "");
   if (!token) return res.status(401).json({ message: "No token" });
@@ -62,5 +69,49 @@ const authMiddleware = (req, res, next) => {
     res.status(401).json({ message: "Invalide Token" });
   }
 };
+
+// Get task request
+app.get("/tasks", authMiddleware, async (req, res) => {
+  const tasks = await Task.find({ userId: req.userId });
+  res.json(tasks);
+});
+
+// Post task request
+app.post("/tasks", authMiddleware, async (req, res) => {
+  const task = new Task({ ...req.body, userId: req.userId });
+  await task.save();
+  res.json(task);
+});
+
+// Delete task request
+app.delete("/tasks/:id", authMiddleware, async (req, res) => {
+  await Task.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+  res.json({ message: "Task deleted" });
+});
+
+// Update task status
+app.patch("/tasks/:id/status", authMiddleware, async (req, res) => {
+  const { status } = req.body;
+  const task = await Task.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    { status },
+    { new: true }
+  );
+  if (!task) return res.status(404).json({ message: "Task not found" });
+  res.json(task);
+});
+
+// Update task priority
+app.patch("/tasks/:id/priority", authMiddleware, async (req, res) => {
+  const { priority } = req.body;
+  const task = await Task.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    { priority },
+    { new: true }
+  );
+  if (!task) return res.status(404).json({ message: "Task not found" });
+  res.json(task);
+});
+
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
