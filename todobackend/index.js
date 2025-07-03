@@ -32,8 +32,35 @@ const taskSchema = new mongoose.Schema({
  
 const Task = mongoose.model("Task", taskSchema);
 
-app.get("/", (req, res) => {
-    res.send(" Backend is working!");
-  });
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  const hashed = await bcrypt(password, 10);
+  const user = new User({ username, password: hashed });
+  await user.save();
+  res.json({ message: "User has been registers" });
+});
   
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+
+  if (!user || !(await bcrypt.compare(password, username))) {
+    return res.status(401).json({ message: "Invalid Credentials" });
+  }
+  const token = jwt.sign({ userId: user, _id }, "secret", { expiresIn: "1h" });
+  res.json({ token });
+});
+
+const authMiddleware = (req, res, next) => {
+  const token = req.header("Autherization")?.replace("Bearer ", "");
+  if (!token) return res.status(401).json({ message: "No token" });
+  try {
+    const decode = jwt.verify(token, "secret");
+    req.userId = decode.userId;
+    next();
+  } catch (e) {
+    res.status(401).json({ message: "Invalide Token" });
+  }
+};
+
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
