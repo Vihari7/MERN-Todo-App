@@ -14,6 +14,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   'https://mern-todo-app-lilac.vercel.app',  // Vercel domain
+  'https://mern-todo-5yavt1wv3-vihari7s-projects.vercel.app',
   'http://localhost:3000'  // For local testing 
 ];
 
