@@ -20,7 +20,7 @@ export default function App() {
   const fetchTasks = async (token) => {
     try {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/tasks`,
+      "https://mern-todo-app-production-b3c1.up.railway.app/tasks",
       { headers: { Authorization: `Bearer ${token}` } }
     );
       if (!response.ok) throw new Error("Failed to fetch tasks");
@@ -44,7 +44,7 @@ export default function App() {
   // function to add a new task
   const addTask = async (text) => {
     const response = await fetch(
-       `${process.env.REACT_APP_API_URL}/tasks`,
+       "https://mern-todo-app-production-b3c1.up.railway.app/tasks",
       {
         method: "POST",
         headers: {
@@ -60,7 +60,7 @@ export default function App() {
 
   // delete a task by id
   const deleteTask = async (id) => {
-    await fetch(`${process.env.REACT_APP_API_URL}/tasks/${id}`, {
+    await fetch('https://mern-todo-app-production-b3c1.up.railway.app/tasks/${id}', {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -71,7 +71,7 @@ export default function App() {
   const updateTaskStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "pending" ? "completed" : "pending";
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/tasks/${id}/status`,
+      `https://mern-todo-app-production-b3c1.up.railway.app/tasks/${id}/status`,
       {
         method: "PATCH",
         headers: {
@@ -88,7 +88,7 @@ export default function App() {
   //update task priority
   const updateTaskPriority = async (id, newPriority) => {
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/tasks/${id}/priority`,
+      `https://mern-todo-app-production-b3c1.up.railway.app/tasks/${id}/priority`,
       {
         method: "PATCH",
         headers: {

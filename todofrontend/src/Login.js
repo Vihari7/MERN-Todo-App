@@ -14,7 +14,7 @@ export default function Login({ setToken }) {
     setAuthError("");
     try {
       const response = await 
-        fetch(`${process.env.REACT_APP_API_URL}/login`,{
+        fetch("https://mern-todo-app-production-b3c1.up.railway.app/login",{
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
