@@ -11,14 +11,21 @@ const MONGOURL = process.env.MONGOURL;
 const cors = require("cors");
 
 app.use(express.json());
-app.use(cors({
-  origin: "https://mern-todo-app-lilac.vercel.app",
-}));
 
 const allowedOrigins = [
   'https://mern-todo-app-lilac.vercel.app',  // Vercel domain
-  'http://localhost:3000'  // For local testing if needed
+  'http://localhost:3000'  // For local testing 
 ];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+app.options("*", cors()); // Respond to preflight requests
+
 console.log("MONGOURL from env:", process.env.MONGOURL);
 
 mongoose.connect(MONGOURL);
@@ -72,7 +79,7 @@ app.post("/login", async (req, res) => {
 
 //create authMiddleware for route protection
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Autherization")?.replace("Bearer ", "");
+  const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return res.status(401).json({ message: "No token" });
   try {
     const decode = jwt.verify(token, "secret");
