@@ -13,14 +13,29 @@ function Signup() {
     setAuthLoading(true);
     setAuthError("");
     setSuccess(false);
-    const response = await fetch(
-      "${process.env.REACT_APP_API_URL}/register",
+    try {
+    const response = await 
+      fetch(`${process.env.REACT_APP_API_URL}/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       }
     );
+     const contentType = response.headers.get("content-type");
+
+      if (!response.ok) {
+        let errorMessage = "Signup failed";
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } else {
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+
     const data = await response.json();
     setAuthLoading(false);
     if (data.message === "User registered") {
@@ -28,6 +43,11 @@ function Signup() {
       setTimeout(() => navigate("/login"), 1500);
     } else {
       setAuthError(data.message || "Signup failed");
+    }
+      } catch (error) {
+      setAuthError(error.message);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
