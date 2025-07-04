@@ -32,7 +32,7 @@ function Signup() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-8 bg-blue-50 rounded-xl shadow-lg border border-blue-200">
+    <div className="max-w-md mx-auto mt-20 p-14 bg-blue-50 rounded-lg border border-blue-300">
       <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-600">
         Sign Up
       </h2>
