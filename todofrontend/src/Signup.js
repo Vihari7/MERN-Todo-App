@@ -21,7 +21,8 @@ function Signup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       }
-    );
+    );console.log("Calling API URL:", `${process.env.REACT_APP_API_URL}/register`);
+
      const contentType = response.headers.get("content-type");
 
       if (!response.ok) {
