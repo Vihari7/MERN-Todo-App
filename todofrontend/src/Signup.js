@@ -14,13 +14,17 @@ function Signup() {
     setAuthError("");
     setSuccess(false);
     try {
-    const response = await 
-      fetch(`${process.env.REACT_APP_API_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+    const apiUrl = process.env.REACT_APP_API_URL.replace(/\/+$/, ""); 
+
+    const response = await fetch(`${apiUrl}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
     });
-    console.log("Calling API URL:", `${process.env.REACT_APP_API_URL}/register`);
+
+    console.log("Calling API URL:", `${apiUrl}/register`); 
+
+    const contentType = response.headers.get("content-type");
 
      const contentType = response.headers.get("content-type");
 
