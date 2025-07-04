@@ -15,13 +15,14 @@ function Signup() {
     setSuccess(false);
     try {
     const response = await 
-      fetch("https://mern-todo-app-production-b3c1.up.railway.app/register",
+      fetch(`${process.env.REACT_APP_API_URL}/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       }
-    );
+    );console.log("Calling API URL:", `${process.env.REACT_APP_API_URL}/register`);
+
      const contentType = response.headers.get("content-type");
 
       if (!response.ok) {
