@@ -18,18 +18,18 @@ export default function App() {
 
   //Fetching the tasks from the backend
   const fetchTasks = async (token) => {
+    try {
     const response = await fetch(
-      "https://mern-todo-app-production-b3c1.up.railway.app/tasks",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+      `${process.env.REACT_APP_API_URL}/tasks`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
-    const data = await response.json();
-    console.log("Fetched tasks:", data);
-    
-    setTasks(Array.isArray(data) ? data : data.tasks || []);
+      if (!response.ok) throw new Error("Failed to fetch tasks");
+      const data = await response.json();
+      setTasks(Array.isArray(data) ? data : data.tasks || []);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
   };
-
   useEffect(() => {
     if (token) fetchTasks(token);
   }, [token]);
@@ -44,7 +44,7 @@ export default function App() {
   // function to add a new task
   const addTask = async (text) => {
     const response = await fetch(
-      "https://mern-todo-app-production-b3c1.up.railway.app/tasks",
+       `${process.env.REACT_APP_API_URL}/tasks`,
       {
         method: "POST",
         headers: {
@@ -60,7 +60,7 @@ export default function App() {
 
   // delete a task by id
   const deleteTask = async (id) => {
-    await fetch(`https://mern-todo-app-production-b3c1.up.railway.app/tasks/${id}`, {
+    await fetch(`${process.env.REACT_APP_API_URL}/tasks/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -71,7 +71,7 @@ export default function App() {
   const updateTaskStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "pending" ? "completed" : "pending";
     const response = await fetch(
-      `https://mern-todo-app-production-b3c1.up.railway.app/${id}/status`,
+      `${process.env.REACT_APP_API_URL}/tasks/${id}/status`,
       {
         method: "PATCH",
         headers: {
@@ -88,7 +88,7 @@ export default function App() {
   //update task priority
   const updateTaskPriority = async (id, newPriority) => {
     const response = await fetch(
-      `https://mern-todo-app-production-b3c1.up.railway.app/${id}/priority`,
+      `${process.env.REACT_APP_API_URL}/tasks/${id}/priority`,
       {
         method: "PATCH",
         headers: {
@@ -150,6 +150,7 @@ export default function App() {
             type="text"
             className="p-3 border-2 border-blue-300 rounded-lg w-2/3 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Add a task"
+            required
           />
           <button
             type="submit"
@@ -237,7 +238,7 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route
           path="/"
-          element={<MainApp /> }
+          element={token ? <MainApp /> : <Navigate to="/login" replace />}
         />
       </Routes>
     </Router>

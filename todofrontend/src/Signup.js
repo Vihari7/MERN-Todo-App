@@ -14,7 +14,7 @@ function Signup() {
     setAuthError("");
     setSuccess(false);
     const response = await fetch(
-      "https://mern-todo-app-production-b3c1.up.railway.app/register",
+      "${process.env.REACT_APP_API_URL}/register",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
