@@ -15,13 +15,12 @@ function Signup() {
     setSuccess(false);
     try {
     const response = await 
-      fetch(`${process.env.REACT_APP_API_URL}/register`,
-      {
+      fetch(`${process.env.REACT_APP_API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
-      }
-    );console.log("Calling API URL:", `${process.env.REACT_APP_API_URL}/register`);
+    });
+    console.log("Calling API URL:", `${process.env.REACT_APP_API_URL}/register`);
 
      const contentType = response.headers.get("content-type");
 

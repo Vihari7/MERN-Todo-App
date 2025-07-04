@@ -11,23 +11,28 @@ const MONGOURL = process.env.MONGOURL;
 const cors = require("cors");
 
 app.use(express.json());
+
+const allowedOrigins = [
+  'https://mern-todo-app-lilac.vercel.app',  //  Vercel domain
+  'http://localhost:3000'  // For local testing 
+];
+
 app.use(cors({
-   origin: function(origin, callback) {
-    // allow requests with no origin like mobile apps or curl
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);  
+    if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
     return callback(null, true);
-  }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, 
 }));
 
+app.options('*', cors());
 
-const allowedOrigins = [
-  'https://mern-todo-app-lilac.vercel.app/',  // Replace with your actual Vercel domain
-  'http://localhost:3000'  // For local testing if needed
-];
 console.log("MONGOURL from env:", process.env.MONGOURL);
 
 mongoose.connect(MONGOURL);
