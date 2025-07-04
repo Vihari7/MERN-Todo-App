@@ -15,7 +15,6 @@ app.use(cors({
   origin: "*",
 }));
 
-
 const allowedOrigins = [
   'https://mern-todo-app-lilac.vercel.app',  // Vercel domain
   'http://localhost:3000'  // For local testing if needed
