@@ -26,8 +26,6 @@ function Signup() {
 
     const contentType = response.headers.get("content-type");
 
-     const contentType = response.headers.get("content-type");
-
       if (!response.ok) {
         let errorMessage = "Signup failed";
         if (contentType && contentType.includes("application/json")) {
